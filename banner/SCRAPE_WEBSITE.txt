@@ -1,0 +1,1 @@
+scrapy crawl math -o items.json -t json
