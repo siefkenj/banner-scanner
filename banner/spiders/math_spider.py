@@ -1,6 +1,8 @@
 import re
 from scrapy.spider import BaseSpider, Request
 from scrapy.selector import HtmlXPathSelector
+from scrapy import log
+import json
 
 from banner.items import Course
 
@@ -41,7 +43,12 @@ class PrereqSpider(BaseSpider):
         # turns a list with infix 'and' and 'or' into a PrereqGroup tree
         def deinfix(l):
             if len(l) == 1:
-                return gen_prereq_group('and', [l[0]])
+                # normally, a single-element list is a single course, but the
+                # situation may arise that we have a single nested list
+                if type(l[0]) == dict:
+                    return gen_prereq_group('and', [l[0]])
+                else:
+                    return deinfix(l[0])
             if len(l) < 1:
                 return None
 
@@ -62,7 +69,11 @@ class PrereqSpider(BaseSpider):
                 parsed += [i.strip() for i in parensplit.findall(elm.extract())]
             else:
                 # if we made it here, we must be an anchor element, so parse our href string and return the appropriate course
-                parsed.append(self.gen_course_from_prereq_link(elm))
+                item = self.gen_course_from_prereq_link(elm)
+                if len(item['number']) > 0 and len(item['department']) > 0:
+                    parsed.append(self.gen_course_from_prereq_link(elm))
+                    
+        log.msg('parsed = '+str(parsed),level=log.DEBUG)
 
         # we have a list of tokens, some of which are parens.  Turn this into
         # a nested list so we can continue parsing
@@ -122,6 +133,10 @@ class MathSpider(PrereqSpider):
         
         item = response.meta['item']
         item['prereqs'] = prereqs
+        if item['number'] == '375' and item['department'] == 'CSC':
+            outfile = open('special_case.txt','w')
+            outfile.write(json.dumps(dict(item.items())))
+            outfile.close()
         return item
 
 
