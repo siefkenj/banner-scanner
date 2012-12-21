@@ -29,7 +29,7 @@ class BannerPipeline(object):
             exporter.start_exporting()
             
             to_export = []
-            log.msg(str(courses),level=log.DEBUG)
+#            log.msg(str(courses),level=log.DEBUG)
             for number,items in courses.items():
                 consolidated = self.consolidate_course(items)
                 if consolidated is not None:
@@ -99,7 +99,7 @@ class BannerPipeline(object):
 #        return item
 
     def consolidate_course(self,items):
-        log.msg('items: '+str(items),level=log.DEBUG)
+#        log.msg('items: '+str(items),level=log.DEBUG)
         course = Course()
         calendar_item = None
         catalog_item = None

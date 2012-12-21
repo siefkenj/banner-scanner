@@ -8,7 +8,7 @@ from scrapy.log import DEBUG
 
 from banner.items import CalendarItem, CatalogItem, ScheduleItem
 
-TEST_SUBJECTS = ['ASL','ED-D']
+TEST_SUBJECTS = ['MATH']
 TEST_RUN = False
 
 class BannerSpider(BaseSpider):
