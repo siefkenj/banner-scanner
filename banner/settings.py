@@ -13,3 +13,6 @@ SPIDER_MODULES = ['banner.spiders']
 NEWSPIDER_MODULE = 'banner.spiders'
 USER_AGENT = '%s/%s' % (BOT_NAME, BOT_VERSION)
 
+ITEM_PIPELINES = [
+    'banner.pipelines.BannerPipeline',
+    ]
