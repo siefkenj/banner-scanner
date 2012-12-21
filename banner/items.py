@@ -5,29 +5,43 @@
 
 from scrapy.item import Item, Field
 
-class BannerItem(Item):
+class CalendarItem(Item):
+    """
+    Item containing data scraped from the calendar website
+    """
+    number = Field()
+    subject = Field()
+    url = Field()
+    description = Field()
+
+class CatalogItem(Item):
     """
     Data structure received from scraper
     
     Contains a single section of a particular class in a specific term
     """
     number = Field()
-    department = Field()
+    subject = Field()
     url = Field()
     title = Field()
-    desc = Field()
-    term = Field()
     crn = Field()
     prereqs = Field()
-    enrollment = Field()    
     
     def __eq__(self,other):
         """
-        Two courses are equal if their department and number are the same
+        Two courses are equal if their subject and number are the same
         """
         
         return (self['number'] == other['number'] and 
-                self['department'] == other['department'])
+                self['subject'] == other['subject'])
+                
+class ScheduleItem(Item):
+    subject = Field()
+    number = Field()
+    term = Field()
+    crn = Field()
+    capacity = Field()
+    enrollment = Field()
 
 class Course(Item):
     """
@@ -36,17 +50,23 @@ class Course(Item):
     Contains a single course with enrollment data from all terms and sections
     """
     number = Field()
-    department = Field()
-    url = Field()
+    subject = Field()
+    calendar_url = Field()
+    catalog_url = Field()
     title = Field()
-    desc = Field()
-    sections = Field()
+    description = Field()
+    terms_offered = Field()
     prereqs = Field()
+    
+    def __init__(self,other=None):
+        Item.__init__(self)
+        
     
     def __eq__(self,other):
         """
-        Two courses are equal if their department and number are the same
+        Two courses are equal if their subject and number are the same
         """
         
         return (self['number'] == other['number'] and 
-                self['department'] == other['department'])
+                self['subject'] == other['subject'])
+        
