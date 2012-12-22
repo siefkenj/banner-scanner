@@ -24,7 +24,7 @@ class BannerPipeline(object):
         log.msg('Exporting scraped data...',level=log.DEBUG)
         for subject,courses in self.scraped_items.items():
             log.msg(subject,level=log.DEBUG)
-            outfile = open(subject+'.json','w')
+            outfile = open('scraped_data/'+subject+'.json','w')
             exporter = JsonItemExporter(outfile)
             exporter.start_exporting()
             
