@@ -24,7 +24,7 @@ class BannerPipeline(object):
         log.msg('Exporting scraped data...',level=log.DEBUG)
         for subject,courses in self.scraped_items.items():
             log.msg(subject,level=log.DEBUG)
-            outfile = open(subject+'.json','w')
+            outfile = open('scraped_data/'+subject+'.json','w')
             exporter = JsonItemExporter(outfile)
             exporter.start_exporting()
             
@@ -36,7 +36,7 @@ class BannerPipeline(object):
                     to_export.append(consolidated)
 
             # sort classes by number
-            class_key = lambda x : int(x['number'][0:3])
+            class_key = lambda x : x['number']
             to_export.sort(key=class_key)                
             
             for item in to_export:
