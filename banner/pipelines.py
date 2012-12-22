@@ -5,12 +5,16 @@
 
 import json
 import pickle
+from os.path import isdir
+from os import mkdir
 
 from scrapy.contrib.exporter import JsonItemExporter, PickleItemExporter, PprintItemExporter
 from scrapy import log
 from banner.items import Course, CalendarItem, CatalogItem, ScheduleItem
 
 class BannerPipeline(object):
+    OUTPUT_DIR = 'scraped_data'    
+    
     def __init__(self):
         self.scraped_items = {}
         self.subjects = []
@@ -22,6 +26,8 @@ class BannerPipeline(object):
         pickle.dump(self.scraped_items,outfile_pkl)
         outfile_pkl.close()
         log.msg('Exporting scraped data...',level=log.DEBUG)
+        if not isdir(self.OUTPUT_DIR):
+            mkdir(self.OUTPUT_DIR)
         for subject,courses in self.scraped_items.items():
             log.msg(subject,level=log.DEBUG)
             outfile = open('scraped_data/'+subject+'.json','w')
