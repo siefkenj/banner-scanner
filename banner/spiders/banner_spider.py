@@ -301,13 +301,16 @@ class BannerSpider(BaseSpider):
 
         parsed = []
         for elm in prereqs:
-            if elm.xmlNode.type == 'text':
-                parsed += [i.strip() for i in parensplit.findall(elm.extract())]
-            else:
+            # scrapy selectors no longer have the xmlNode attribute...so let's just look to see if we have an href
+            # in order to tell if we're a link
+            if elm.select('@href'):
                 # if we made it here, we must be an anchor element, so parse our href string and return the appropriate course
                 item = self.gen_course_from_prereq_link(elm)
                 if len(item['number']) > 0 and len(item['subject']) > 0:
                     parsed.append(item)
+            else:
+                parsed += [i.strip() for i in parensplit.findall(elm.extract())]
+
                     
         self.log('parsed = '+str(parsed),level=DEBUG)
 
